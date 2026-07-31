@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -20,14 +20,12 @@
             --accent-bg: #f1f5f9;
         }
 
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
-
 
         body {
             background-color: var(--bg-color);
@@ -37,12 +35,10 @@
             margin: 0 auto;
         }
 
-
         header {
             margin-bottom: 20px;
             text-align: center;
         }
-
 
         header h1 {
             font-size: 1.8rem;
@@ -51,19 +47,16 @@
             font-weight: 700;
         }
 
-
         header p {
             color: var(--text-muted);
             font-size: 0.95rem;
         }
-
 
         .container {
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-
 
         /* Panel de Controles e Entradas */
         .panel {
@@ -74,14 +67,12 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.04);
         }
 
-
         .controls-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
             gap: 16px;
             margin-bottom: 20px;
         }
-
 
         .control-card {
             background: var(--accent-bg);
@@ -93,7 +84,6 @@
             gap: 8px;
         }
 
-
         .control-label-row {
             display: flex;
             justify-content: space-between;
@@ -103,13 +93,11 @@
             color: var(--text-main);
         }
 
-
         .input-row {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
 
         .input-row input[type="range"] {
             flex: 1;
@@ -117,7 +105,6 @@
             height: 6px;
             accent-color: var(--primary);
         }
-
 
         .num-input-wrap {
             display: flex;
@@ -129,7 +116,6 @@
             padding: 2px 6px;
         }
 
-
         .num-input-wrap input[type="number"] {
             width: 58px;
             border: none;
@@ -140,13 +126,11 @@
             color: var(--primary-dark);
         }
 
-
         .num-input-wrap span {
             font-size: 0.8rem;
             color: var(--text-muted);
             font-weight: 500;
         }
-
 
         /* Barra de Resultados / KPI */
         .kpi-grid {
@@ -159,7 +143,6 @@
             border: 1px solid #e2e8f0;
         }
 
-
         .kpi-card {
             background: #ffffff;
             padding: 10px 12px;
@@ -168,10 +151,8 @@
             box-shadow: 0 1px 2px rgba(0,0,0,0.03);
         }
 
-
         .kpi-card.kpi-m-pos { border-left-color: var(--m-pos-color); }
         .kpi-card.kpi-m-neg { border-left-color: var(--m-color); }
-
 
         .kpi-label {
             font-size: 0.75rem;
@@ -181,20 +162,17 @@
             margin-bottom: 2px;
         }
 
-
         .kpi-value {
             font-size: 1.1rem;
             font-weight: 700;
             color: var(--text-main);
         }
 
-
         .kpi-subtext {
             font-size: 0.75rem;
             color: var(--text-muted);
             margin-top: 2px;
         }
-
 
         /* Tarjetas de Gráficos */
         .canvas-card {
@@ -205,7 +183,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.04);
         }
 
-
         .canvas-card h2 {
             font-size: 1.05rem;
             margin-bottom: 12px;
@@ -215,7 +192,6 @@
             gap: 8px;
         }
 
-
         .canvas-card h2::before {
             content: "";
             display: inline-block;
@@ -224,18 +200,15 @@
             border-radius: 50%;
         }
 
-
         .card-struct h2::before { background-color: var(--structure-color); }
         .card-m h2::before { background-color: var(--m-color); }
         .card-q h2::before { background-color: var(--q-color); }
-
 
         canvas {
             width: 100%;
             height: 200px;
             display: block;
         }
-
 
         .note {
             font-size: 0.78rem;
@@ -244,7 +217,6 @@
             text-align: right;
             font-style: italic;
         }
-
 
         @media (max-width: 650px) {
             body { padding: 10px; }
@@ -255,12 +227,10 @@
 </head>
 <body>
 
-
     <header>
         <h1>Estabilidad I — Viga Isostática con Voladizo</h1>
         <p>Análisis en tiempo real de diagramas de esfuerzos internos Q(x) y M(x)</p>
     </header>
-
 
     <div class="container">
         <!-- Panel de Entrada de Datos -->
@@ -280,7 +250,6 @@
                     </div>
                 </div>
 
-
                 <!-- L2 -->
                 <div class="control-card">
                     <div class="control-label-row">
@@ -294,7 +263,6 @@
                         </div>
                     </div>
                 </div>
-
 
                 <!-- q1 -->
                 <div class="control-card">
@@ -310,7 +278,6 @@
                     </div>
                 </div>
 
-
                 <!-- q2 -->
                 <div class="control-card">
                     <div class="control-label-row">
@@ -325,7 +292,6 @@
                     </div>
                 </div>
             </div>
-
 
             <!-- Panel KPI / Resultados Destacados -->
             <div class="kpi-grid">
@@ -352,13 +318,11 @@
             </div>
         </div>
 
-
         <!-- Gráfico 1: Esquema Estructural y Cargas -->
         <div class="canvas-card card-struct">
             <h2>Estructura, Apoyos y Cargas</h2>
             <canvas id="cvsStruct"></canvas>
         </div>
-
 
         <!-- Gráfico 2: Diagrama de Momento Flector -->
         <div class="canvas-card card-m">
@@ -367,14 +331,12 @@
             <div class="note">* Convención de Ingeniería Civil: Momentos positivos dibujados hacia abajo (+).</div>
         </div>
 
-
         <!-- Gráfico 3: Diagrama de Esfuerzo Cortante -->
         <div class="canvas-card card-q">
             <h2>Diagrama de Esfuerzo Cortante Q(x) [kN]</h2>
             <canvas id="cvsQ"></canvas>
         </div>
     </div>
-
 
     <script>
         // Elementos de entrada (Sliders y Números)
@@ -385,7 +347,6 @@
             q2: { slider: document.getElementById('sliderQ2'), num: document.getElementById('numQ2') }
         };
 
-
         // Elementos de salida KPI
         const valRA = document.getElementById('valRA');
         const valRB = document.getElementById('valRB');
@@ -393,17 +354,14 @@
         const valXZero = document.getElementById('valXZero');
         const valMB = document.getElementById('valMB');
 
-
         // Canvas
         const cvsStruct = document.getElementById('cvsStruct');
         const cvsM = document.getElementById('cvsM');
         const cvsQ = document.getElementById('cvsQ');
 
-
         const ctxStruct = cvsStruct.getContext('2d');
         const ctxM = cvsM.getContext('2d');
         const ctxQ = cvsQ.getContext('2d');
-
 
         // Ajuste dinámico de resolución Canvas para pantallas de alta densidad (Retina)
         function resizeCanvas(canvas) {
@@ -415,23 +373,19 @@
             return { width: rect.width, height: rect.height };
         }
 
-
         // Sincronización bidireccional entre Sliders y Campos Numéricos
         Object.keys(inputs).forEach(key => {
             const { slider, num } = inputs[key];
-
 
             slider.addEventListener('input', () => {
                 num.value = slider.value;
                 update();
             });
 
-
             num.addEventListener('input', () => {
                 let val = parseFloat(num.value);
                 const min = parseFloat(num.min);
                 const max = parseFloat(num.max);
-
 
                 if (!isNaN(val)) {
                     if (val < min) val = min;
@@ -441,7 +395,6 @@
                 }
             });
 
-
             num.addEventListener('blur', () => {
                 if (num.value === '' || isNaN(parseFloat(num.value))) {
                     num.value = slider.value;
@@ -450,7 +403,6 @@
             });
         });
 
-
         function update() {
             // Read values
             const L1 = parseFloat(inputs.L1.num.value) || 4.0;
@@ -458,15 +410,12 @@
             const q1 = parseFloat(inputs.q1.num.value) || 0;
             const q2 = parseFloat(inputs.q2.num.value) || 0;
 
-
             const Ltotal = L1 + L2;
-
 
             // EQUILIBRIUM CALCULATIONS
             // Sum of Moments at A = 0 => RB * L1 - q1*L1*(L1/2) - q2*L2*(L1 + L2/2) = 0
             const RB = (q1 * Math.pow(L1, 2) / 2 + q2 * L2 * (L1 + L2 / 2)) / L1;
             const RA = (q1 * L1) + (q2 * L2) - RB;
-
 
             // Zero shear position in Span 1 (if Q=0 occurs between A and B)
             // Q(x) = RA - q1 * x = 0 => x0 = RA / q1
@@ -480,16 +429,13 @@
                 }
             }
 
-
             // Moment at Support B
             const MB = - (q2 * Math.pow(L2, 2) / 2);
-
 
             // Update KPI Text Outputs
             valRA.textContent = `${RA.toFixed(2)} kN`;
             valRB.textContent = `${RB.toFixed(2)} kN`;
             valMB.textContent = `${MB.toFixed(2)} kNm`;
-
 
             if (xZeroV >= 0 && mPosMax > 0) {
                 valMPos.textContent = `+${mPosMax.toFixed(2)} kNm`;
@@ -502,7 +448,6 @@
                 valXZero.textContent = `Sin corte nulo en tramo`;
             }
 
-
             // Internal Effort Functions
             function getQ(x) {
                 if (x <= L1) {
@@ -512,7 +457,6 @@
                 }
             }
 
-
             function getM(x) {
                 if (x <= L1) {
                     return RA * x - (q1 * Math.pow(x, 2) / 2);
@@ -521,20 +465,16 @@
                 }
             }
 
-
             // Setup Canvas Dimensions
             const dimS = resizeCanvas(cvsStruct);
             const dimM = resizeCanvas(cvsM);
             const dimQ = resizeCanvas(cvsQ);
 
-
             const marginX = 65;
             const widthS = dimS.width - 2 * marginX;
             const scaleX = widthS / Ltotal;
 
-
             function toPx(x) { return marginX + x * scaleX; }
-
 
             // -------------------------------------------------------------
             // DIBUJO 1: ESTRUCTURA, APOYOS Y CARGAS
@@ -543,26 +483,22 @@
             ctx1.clearRect(0, 0, dimS.width, dimS.height);
             const yBeam = 110;
 
-
             // Determinar altura máxima visual proporcional para las cargas q1 y q2
             const maxQVal = Math.max(q1, q2, 1);
             const maxHLoad = 45; // altura máxima en px
-
 
             function drawDistributedLoad(xStart, xEnd, qVal, labelText, color) {
                 if (qVal <= 0) return;
                 const pxStart = toPx(xStart);
                 const pxEnd = toPx(xEnd);
-               
+                
                 // Altura proporcional a la magnitud q (kN/m)
                 const hLoad = Math.max(12, (qVal / maxQVal) * maxHLoad);
                 const yTop = yBeam - hLoad;
 
-
                 ctx1.fillStyle = color === 'q1' ? "rgba(37, 99, 235, 0.12)" : "rgba(225, 29, 72, 0.12)";
                 ctx1.strokeStyle = color === 'q1' ? "#2563eb" : "#e11d48";
                 ctx1.lineWidth = 1.5;
-
 
                 // Bloque de carga
                 ctx1.fillRect(pxStart, yTop, pxEnd - pxStart, hLoad);
@@ -570,7 +506,6 @@
                 ctx1.moveTo(pxStart, yTop);
                 ctx1.lineTo(pxEnd, yTop);
                 ctx1.stroke();
-
 
                 // Flechas indicadoras de carga
                 const length = pxEnd - pxStart;
@@ -587,7 +522,6 @@
                     ctx1.stroke();
                 }
 
-
                 // Texto de etiqueta de carga
                 ctx1.fillStyle = color === 'q1' ? "#1d4ed8" : "#be123c";
                 ctx1.font = "bold 11px sans-serif";
@@ -595,10 +529,8 @@
                 ctx1.fillText(`${labelText} = ${qVal} kN/m`, (pxStart + pxEnd) / 2, yTop - 6);
             }
 
-
             drawDistributedLoad(0, L1, q1, "q1", "q1");
             drawDistributedLoad(L1, Ltotal, q2, "q2", "q2");
-
 
             // Barra de la Viga
             ctx1.strokeStyle = "#334155";
@@ -607,7 +539,6 @@
             ctx1.moveTo(toPx(0), yBeam);
             ctx1.lineTo(toPx(Ltotal), yBeam);
             ctx1.stroke();
-
 
             // Apoyo Fijo en A (x = 0)
             const pxA = toPx(0);
@@ -618,7 +549,6 @@
             ctx1.lineTo(pxA + 12, yBeam + 22);
             ctx1.closePath();
             ctx1.fill();
-
 
             // Apoyo Móvil en B (x = L1)
             const pxB = toPx(L1);
@@ -634,7 +564,6 @@
             ctx1.arc(pxB + 6, yBeam + 22, 3, 0, Math.PI * 2);
             ctx1.fill();
 
-
             // Cotas de Longitud L1 y L2
             const yDim = yBeam + 48;
             ctx1.strokeStyle = "#94a3b8";
@@ -642,7 +571,6 @@
             ctx1.fillStyle = "#475569";
             ctx1.font = "11px sans-serif";
             ctx1.textAlign = "center";
-
 
             // Cota L1
             ctx1.beginPath();
@@ -652,7 +580,6 @@
             ctx1.stroke();
             ctx1.fillText(`L1 = ${L1} m`, toPx(L1 / 2), yDim - 5);
 
-
             // Cota L2
             ctx1.beginPath();
             ctx1.moveTo(toPx(L1), yDim); ctx1.lineTo(toPx(Ltotal), yDim);
@@ -661,14 +588,12 @@
             ctx1.stroke();
             ctx1.fillText(`L2 = ${L2} m`, toPx(L1 + L2 / 2), yDim - 5);
 
-
             // -------------------------------------------------------------
             // DIBUJO 2: DIAGRAMA DE MOMENTO FLECTOR M(x)
             // -------------------------------------------------------------
             const ctx2 = ctxM;
             ctx2.clearRect(0, 0, dimM.width, dimM.height);
             const yCenterM = dimM.height / 2;
-
 
             // Muestreo para escala
             const samples = 120;
@@ -679,7 +604,6 @@
             }
             const scaleY_M = maxAbsM > 0 ? (dimM.height / 2 - 32) / maxAbsM : 1;
 
-
             // Línea de referencia (Cero)
             ctx2.strokeStyle = "#cbd5e1";
             ctx2.lineWidth = 1;
@@ -688,11 +612,9 @@
             ctx2.lineTo(toPx(Ltotal), yCenterM);
             ctx2.stroke();
 
-
             // Trazado de la parábola M(x)
             ctx2.beginPath();
             ctx2.moveTo(toPx(0), yCenterM);
-
 
             for (let i = 0; i <= samples; i++) {
                 const x = (i / samples) * Ltotal;
@@ -702,17 +624,14 @@
                 ctx2.lineTo(toPx(x), py);
             }
 
-
             ctx2.lineTo(toPx(Ltotal), yCenterM);
             ctx2.closePath();
-
 
             ctx2.fillStyle = "rgba(220, 38, 38, 0.12)";
             ctx2.fill();
             ctx2.strokeStyle = "#dc2626";
             ctx2.lineWidth = 2;
             ctx2.stroke();
-
 
             // Puntos Notables en Diagrama M
             // 1. Momento en Apoyo B (x = L1)
@@ -722,17 +641,14 @@
             ctx2.arc(toPx(L1), pyMB, 4, 0, Math.PI * 2);
             ctx2.fill();
 
-
             ctx2.font = "bold 11px sans-serif";
             ctx2.textAlign = "center";
             ctx2.fillText(`M_B = ${MB.toFixed(2)} kNm`, toPx(L1), pyMB - 8);
-
 
             // 2. Momento Máximo Positivo en Tramo (si ocurre dentro del tramo)
             if (xZeroV > 0 && mPosMax > 0) {
                 const pxZero = toPx(xZeroV);
                 const pyMPos = yCenterM + mPosMax * scaleY_M;
-
 
                 // Línea discontinua vertical indicadora
                 ctx2.strokeStyle = "#16a34a";
@@ -743,13 +659,11 @@
                 ctx2.stroke();
                 ctx2.setLineDash([]);
 
-
                 // Punto del máximo
                 ctx2.fillStyle = "#16a34a";
                 ctx2.beginPath();
                 ctx2.arc(pxZero, pyMPos, 4, 0, Math.PI * 2);
                 ctx2.fill();
-
 
                 // Etiqueta del Momento Máximo Positivo
                 ctx2.font = "bold 11px sans-serif";
@@ -758,14 +672,12 @@
                 ctx2.fillText(`(x = ${xZeroV.toFixed(2)} m)`, pxZero, pyMPos + 28);
             }
 
-
             // -------------------------------------------------------------
             // DIBUJO 3: DIAGRAMA DE ESFUERZO CORTANTE Q(x)
             // -------------------------------------------------------------
             const ctx3 = ctxQ;
             ctx3.clearRect(0, 0, dimQ.width, dimQ.height);
             const yCenterQ = dimQ.height / 2;
-
 
             // Escala vertical Q
             let maxAbsQ = 0;
@@ -775,7 +687,6 @@
             }
             const scaleY_Q = maxAbsQ > 0 ? (dimQ.height / 2 - 28) / maxAbsQ : 1;
 
-
             // Línea Cero
             ctx3.strokeStyle = "#cbd5e1";
             ctx3.lineWidth = 1;
@@ -784,13 +695,11 @@
             ctx3.lineTo(toPx(Ltotal), yCenterQ);
             ctx3.stroke();
 
-
             // Puntos clave de Q
             const Q_A_der = RA;
             const Q_B_izq = RA - q1 * L1;
             const Q_B_der = Q_B_izq + RB;
             const Q_C_izq = Q_B_der - q2 * L2;
-
 
             // Polígono Q
             ctx3.beginPath();
@@ -802,13 +711,11 @@
             ctx3.lineTo(toPx(Ltotal), yCenterQ);
             ctx3.closePath();
 
-
             ctx3.fillStyle = "rgba(37, 99, 235, 0.12)";
             ctx3.fill();
             ctx3.strokeStyle = "#2563eb";
             ctx3.lineWidth = 2;
             ctx3.stroke();
-
 
             // Indicación del punto Q = 0
             if (xZeroV > 0) {
@@ -821,7 +728,6 @@
                 ctx3.stroke();
                 ctx3.setLineDash([]);
 
-
                 ctx3.fillStyle = "#16a34a";
                 ctx3.font = "bold 10px sans-serif";
                 ctx3.textAlign = "center";
@@ -829,15 +735,13 @@
                 ctx3.fillText(`x = ${xZeroV.toFixed(2)} m`, pxZero, yCenterQ + 24);
             }
 
-
             // Valores extremos de Q
             ctx3.fillStyle = "#1d4ed8";
             ctx3.font = "bold 11px sans-serif";
-           
+            
             // Reacción A
             ctx3.textAlign = "left";
             ctx3.fillText(`${Q_A_der.toFixed(2)} kN`, toPx(0) + 6, yCenterQ - Q_A_der * scaleY_Q - 6);
-
 
             // Apoyo B
             ctx3.textAlign = "right";
@@ -846,10 +750,8 @@
             ctx3.fillText(`${Q_B_der.toFixed(2)} kN`, toPx(L1) + 6, yCenterQ - Q_B_der * scaleY_Q + (Q_B_der >= 0 ? -6 : 14));
         }
 
-
         // Eventos para redimensionar la ventana
         window.addEventListener('resize', update);
-
 
         // Render inicial
         update();
