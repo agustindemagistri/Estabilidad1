@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estabilidad I - Casos Prácticos de Estructuras Isostáticas</title>
+    <!-- Cargamos Tailwind CSS para el diseño rápido y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        untblue: '#003b73', /* Azul institucional genérico */
+                        untlight: '#005b9f'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Importar fuente Inter */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        /* Efecto de elevación suave en las tarjetas al pasar el mouse */
+        .card-hover {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-800 antialiased flex flex-col min-h-screen">
+
+
+    <header class="bg-untblue text-white shadow-md border-b-4 border-amber-400">
+        <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <!-- Espacio para Logo Institucional -->
+            <div class="flex items-center gap-4">
+                <!-- Círculo de Placeholder para el logo (Reemplazar la etiqueta img cuando tengas el logo) -->
+                <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-inner overflow-hidden border-2 border-slate-200">
+                    <!-- <img src="ruta/a/tu/logo-unt.png" alt="Logo UNT" class="w-full h-full object-cover"> -->
+                    <span class="text-untblue font-bold text-xs text-center leading-tight">LOGO<br>UNT</span>
+                </div>
+                <div>
+                    <h2 class="text-sm font-semibold tracking-wider text-amber-400 uppercase">Universidad Nacional de Tucumán</h2>
+                    <h1 class="text-2xl font-bold tracking-tight">Estabilidad I</h1>
+                </div>
+            </div>
+            
+            <div class="text-center sm:text-right">
+                <h3 class="text-lg font-medium text-slate-100">Casos Prácticos de</h3>
+                <h3 class="text-xl font-bold text-white">Estructuras Isostáticas</h3>
+            </div>
+        </div>
+    </header>
+
+
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-10 w-full">
+        
+        <!-- SECCIÓN 1: VIGAS -->
+        <section class="mb-12">
+            <div class="border-b-2 border-slate-200 mb-6 pb-2">
+                <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <span class="bg-untlight text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">1</span>
+                    Casos Simples de Vigas
+                </h2>
+            </div>
+            
+            <!-- Grid de Tarjetas (Cards) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- Tarjeta: Viga con Voladizo (La que ya creamos) -->
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col card-hover">
+                    <!-- Esquema SVG ilustrativo -->
+                    <div class="h-32 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative">
+                        <svg width="100%" height="100%" viewBox="0 0 200 80" class="max-w-full">
+                            <!-- Viga -->
+                            <line x1="20" y1="40" x2="180" y2="40" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+                            <!-- Apoyo 1 (Fijo) -->
+                            <polygon points="50,42 40,55 60,55" fill="#64748b"/>
+                            <line x1="35" y1="55" x2="65" y2="55" stroke="#475569" stroke-width="2"/>
+                            <!-- Apoyo 2 (Móvil) -->
+                            <polygon points="130,42 120,52 140,52" fill="#64748b"/>
+                            <circle cx="125" cy="56" r="2.5" fill="#64748b"/><circle cx="135" cy="56" r="2.5" fill="#64748b"/>
+                            <!-- Cargas (Azul y Rojo) -->
+                            <rect x="20" y="25" width="110" height="12" fill="rgba(37, 99, 235, 0.2)" stroke="#2563eb" stroke-width="1"/>
+                            <rect x="130" y="15" width="50" height="22" fill="rgba(225, 29, 72, 0.2)" stroke="#e11d48" stroke-width="1"/>
+                        </svg>
+                    </div>
+                    <!-- Contenido y Botón -->
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Viga con Voladizo</h3>
+                        <p class="text-sm text-slate-600 mb-6 flex-grow">Análisis de viga isostática con apoyo fijo, apoyo móvil y voladizo con cargas distribuidas independientes.</p>
+                        <!-- ATENCIÓN: Aquí enlazamos al archivo que contiene el simulador de la viga -->
+                        <a href="viga-voladizo.html" class="w-full block text-center bg-untlight hover:bg-untblue text-white font-semibold py-2.5 px-4 rounded-lg transition-colors">
+                            Abrir Simulador
+                        </a>
+                    </div>
+                </div>
+
+
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col card-hover">
+                    <div class="h-32 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative opacity-60">
+                        <svg width="100%" height="100%" viewBox="0 0 200 80">
+                            <line x1="30" y1="40" x2="170" y2="40" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+                            <polygon points="40,42 30,55 50,55" fill="#64748b"/>
+                            <line x1="25" y1="55" x2="55" y2="55" stroke="#475569" stroke-width="2"/>
+                            <polygon points="160,42 150,52 170,52" fill="#64748b"/>
+                            <circle cx="155" cy="56" r="2.5" fill="#64748b"/><circle cx="165" cy="56" r="2.5" fill="#64748b"/>
+                            <!-- Carga Puntual -->
+                            <line x1="100" y1="10" x2="100" y2="38" stroke="#dc2626" stroke-width="3"/>
+                            <polygon points="100,40 95,30 105,30" fill="#dc2626"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[1px]">
+                            <span class="bg-slate-800 text-white text-xs font-bold px-2 py-1 rounded">Próximamente</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow opacity-60">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Viga Simplemente Apoyada</h3>
+                        <p class="text-sm text-slate-600 mb-6 flex-grow">Análisis de viga biapoyada con cargas puntuales y momentos aplicados.</p>
+                        <button disabled class="w-full block text-center bg-slate-200 text-slate-500 font-semibold py-2.5 px-4 rounded-lg cursor-not-allowed">
+                            En desarrollo
+                        </button>
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+
+
+        <section class="mb-12">
+            <div class="border-b-2 border-slate-200 mb-6 pb-2">
+                <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <span class="bg-untlight text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">2</span>
+                    Casos Simples de Pórticos
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Tarjeta Placeholder: Pórtico Simple -->
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col card-hover opacity-60">
+                    <div class="h-32 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative">
+                        <svg width="100%" height="100%" viewBox="0 0 200 80">
+                            <!-- Columnas y Dintel -->
+                            <line x1="60" y1="60" x2="60" y2="20" stroke="#334155" stroke-width="4" stroke-linecap="square"/>
+                            <line x1="140" y1="60" x2="140" y2="20" stroke="#334155" stroke-width="4" stroke-linecap="square"/>
+                            <line x1="58" y1="20" x2="142" y2="20" stroke="#334155" stroke-width="4" stroke-linecap="square"/>
+                            <!-- Apoyos -->
+                            <polygon points="60,62 50,75 70,75" fill="#64748b"/>
+                            <polygon points="140,62 130,75 150,75" fill="#64748b"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[1px]">
+                            <span class="bg-slate-800 text-white text-xs font-bold px-2 py-1 rounded">Próximamente</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Pórtico Biarticulado</h3>
+                        <p class="text-sm text-slate-600 mb-6 flex-grow">Cálculo de esfuerzos en pórticos simples bajo cargas laterales y verticales.</p>
+                        <button disabled class="w-full block text-center bg-slate-200 text-slate-500 font-semibold py-2.5 px-4 rounded-lg cursor-not-allowed">
+                            En desarrollo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <section class="mb-8">
+            <div class="border-b-2 border-slate-200 mb-6 pb-2">
+                <h2 class="text-2xl font-bold text-slate-800 flex items-center gap-2">
+                    <span class="bg-untlight text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">3</span>
+                    Trazado de Parábolas
+                </h2>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Tarjeta Placeholder: Parábolas -->
+                <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col card-hover opacity-60">
+                    <div class="h-32 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative">
+                        <svg width="100%" height="100%" viewBox="0 0 200 80">
+                            <!-- Ejes -->
+                            <line x1="20" y1="40" x2="180" y2="40" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4"/>
+                            <!-- Parábola -->
+                            <path d="M 40 40 Q 100 80 160 40" fill="rgba(37, 99, 235, 0.15)" stroke="#2563eb" stroke-width="2"/>
+                            <!-- Tangentes extremas -->
+                            <line x1="40" y1="40" x2="100" y2="60" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="3"/>
+                            <line x1="160" y1="40" x2="100" y2="60" stroke="#e11d48" stroke-width="1.5" stroke-dasharray="3"/>
+                        </svg>
+                        <div class="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[1px]">
+                            <span class="bg-slate-800 text-white text-xs font-bold px-2 py-1 rounded">Próximamente</span>
+                        </div>
+                    </div>
+                    <div class="p-5 flex flex-col flex-grow">
+                        <h3 class="text-lg font-bold text-slate-800 mb-2">Cuadráticas y Cúbicas</h3>
+                        <p class="text-sm text-slate-600 mb-6 flex-grow">Herramienta gráfica para el trazado de parábolas mediante tangentes extremas.</p>
+                        <button disabled class="w-full block text-center bg-slate-200 text-slate-500 font-semibold py-2.5 px-4 rounded-lg cursor-not-allowed">
+                            En desarrollo
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-slate-400 py-6 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center text-sm">
+            <p>&copy; 2026 Universidad Nacional de Tucumán - Cátedra de Estabilidad I.</p>
+            <p class="mt-1">Herramienta educativa interactiva.</p>
+        </div>
+    </footer>
+
+
+</body>
+</html>
