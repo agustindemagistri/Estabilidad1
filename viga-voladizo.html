@@ -56,7 +56,7 @@
                     
                     <!-- Control: L1 -->
                     <div>
-                        <label class="block text-sm font-semibold text-slate-600 mb-1 flex justify-between">
+                        <label class="block text-base font-semibold text-slate-600 mb-1 flex justify-between">
                             <span>Tramo A-B (L1)</span>
                             <span id="val-l1" class="text-untblue">4.0 m</span>
                         </label>
@@ -66,7 +66,7 @@
 
                     <!-- Control: L2 -->
                     <div>
-                        <label class="block text-sm font-semibold text-slate-600 mb-1 flex justify-between">
+                        <label class="block text-base font-semibold text-slate-600 mb-1 flex justify-between">
                             <span>Voladizo B-C (L2)</span>
                             <span id="val-l2" class="text-untblue">2.0 m</span>
                         </label>
@@ -78,7 +78,7 @@
 
                     <!-- Control: q1 -->
                     <div>
-                        <label class="block text-sm font-semibold text-slate-600 mb-1 flex justify-between">
+                        <label class="block text-base font-semibold text-slate-600 mb-1 flex justify-between">
                             <span>Carga q1 (Tramo A-B)</span>
                             <span id="val-q1" class="text-blue-600">10 kN/m</span>
                         </label>
@@ -88,7 +88,7 @@
 
                     <!-- Control: q2 -->
                     <div>
-                        <label class="block text-sm font-semibold text-slate-600 mb-1 flex justify-between">
+                        <label class="block text-base font-semibold text-slate-600 mb-1 flex justify-between">
                             <span>Carga q2 (Voladizo)</span>
                             <span id="val-q2" class="text-rose-600">15 kN/m</span>
                         </label>
@@ -106,7 +106,7 @@
                     <h2 class="font-bold text-slate-800">Resultados Clave</h2>
                 </div>
                 <div class="p-0">
-                    <table class="w-full text-sm text-left">
+                    <table class="w-full text-base text-left">
                         <tbody>
                             <tr class="border-b border-slate-100">
                                 <td class="px-4 py-3 font-medium text-slate-600">Reacción A (Ra)</td>
@@ -352,6 +352,20 @@
             // Reacciones (Flechas verdes)
             if (RA > 0) drawArrow(ctx, ax, beamY + 60, 0, -30, '#16a34a');
             if (RB > 0) drawArrow(ctx, bx, beamY + 60, 0, -30, '#16a34a');
+
+
+            // Textos de Geometría
+            ctx.fillStyle = '#334155';
+            ctx.font = 'bold 13px sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(`L1 = ${L1.toFixed(1)} m`, MARGIN + L1 * mToPx / 2, beamY + 30);
+            ctx.fillText(`L2 = ${L2.toFixed(1)} m`, MARGIN + L1 * mToPx + L2 * mToPx / 2, beamY + 30);
+            
+            ctx.fillStyle = '#2563eb'; // q1 color
+            if(q1 > 0) ctx.fillText(`q1 = ${q1} kN/m`, MARGIN + L1 * mToPx / 2, beamY - Math.min(q1 * 1.2, height * 0.35) - 15);
+            
+            ctx.fillStyle = '#e11d48'; // q2 color
+            if(q2 > 0) ctx.fillText(`q2 = ${q2} kN/m`, MARGIN + L1 * mToPx + L2 * mToPx / 2, beamY - Math.min(q2 * 1.2, height * 0.35) - 15);
         }
 
 
@@ -406,13 +420,19 @@
 
             // Anotar Valores Máximos
             ctx.fillStyle = '#b45309';
-            ctx.font = 'bold 11px sans-serif';
             ctx.textAlign = 'center';
+            
             if (state.mSpanMax > 0.1) {
-                ctx.fillText(state.mSpanMax.toFixed(1), MARGIN + state.xZeroV * mToPx, centerY + state.mSpanMax * scaleY + 15);
+                ctx.font = 'bold 14px sans-serif';
+                ctx.fillText(`M = ${state.mSpanMax.toFixed(2)}`, MARGIN + state.xZeroV * mToPx, centerY + state.mSpanMax * scaleY + 20);
+                
+                ctx.font = '12px sans-serif';
+                ctx.fillText(`x = ${state.xZeroV.toFixed(2)} m`, MARGIN + state.xZeroV * mToPx, centerY + state.mSpanMax * scaleY + 35);
             }
+            
             if (Math.abs(state.MB) > 0.1) {
-                ctx.fillText(state.MB.toFixed(1), MARGIN + L1 * mToPx, centerY + state.MB * scaleY - 8);
+                ctx.font = 'bold 14px sans-serif';
+                ctx.fillText(`M = ${state.MB.toFixed(2)}`, MARGIN + L1 * mToPx, centerY + state.MB * scaleY - 12);
             }
         }
 
@@ -475,6 +495,32 @@
                 ctx.setLineDash([2, 2]);
                 ctx.beginPath(); ctx.moveTo(zx, centerY - 25); ctx.lineTo(zx, centerY + 25); ctx.stroke();
                 ctx.setLineDash([]);
+                
+                ctx.fillStyle = '#ea580c';
+                ctx.font = 'bold 12px sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText(`x = ${state.xZeroV.toFixed(2)} m`, zx, centerY - 32);
+            }
+
+
+            // Anotar Valores de Corte
+            ctx.fillStyle = '#0369a1';
+            ctx.font = 'bold 14px sans-serif';
+            ctx.textAlign = 'center';
+            
+            if (Math.abs(RA) > 0.1) {
+                ctx.fillText(RA.toFixed(2), MARGIN, centerY - RA * scaleY - 8);
+            }
+            
+            const vLeftB = RA - q1 * L1;
+            const vRightB = vLeftB + RB;
+            
+            if (Math.abs(vLeftB) > 0.1) {
+                ctx.fillText(vLeftB.toFixed(2), MARGIN + L1 * mToPx - 15, centerY - vLeftB * scaleY + (vLeftB > 0 ? -8 : 18));
+            }
+            
+            if (Math.abs(vRightB) > 0.1) {
+                ctx.fillText(vRightB.toFixed(2), MARGIN + L1 * mToPx + 15, centerY - vRightB * scaleY + (vRightB > 0 ? -8 : 18));
             }
         }
 
