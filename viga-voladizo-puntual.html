@@ -1,0 +1,519 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estabilidad I - Viga con Voladizo y Carga Puntual</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        canvas {
+            width: 100%;
+            height: 220px;
+            display: block;
+        }
+        @media (max-width: 768px) {
+            canvas { height: 180px; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-md">
+        <div class="w-full px-4 sm:px-8 py-4 flex justify-between items-center">
+            <div>
+                <h1 class="text-xl font-bold">Estabilidad I - Simulador</h1>
+                <p class="text-sm text-slate-300">Viga Isostática con Voladizo + Carga Puntual P</p>
+            </div>
+            <a href="index.html" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded text-sm font-semibold transition">
+                &larr; Volver al Menú
+            </a>
+        </div>
+    </header>
+
+
+    <!-- Main Content -->
+    <main class="w-full px-4 sm:px-8 py-6">
+        <div class="flex flex-col lg:flex-row gap-6">
+            
+            <!-- Panel Izquierdo: Controles (Pasa abajo en celulares) -->
+            <div class="w-full lg:w-1/3 flex flex-col gap-6 order-2 lg:order-1">
+                
+                <!-- Tarjeta de Controles -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h2 class="font-bold text-slate-700 border-b pb-2 mb-4">Parámetros de la Geometría</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center text-sm font-semibold">
+                                <label for="rangeL1">Tramo A-B (L1)</label>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" id="numL1" class="w-16 text-right border rounded p-1 text-blue-700" min="1" max="10" step="0.5" value="4"> m
+                                </div>
+                            </div>
+                            <input type="range" id="rangeL1" class="w-full cursor-pointer accent-blue-600" min="1" max="10" step="0.5" value="4">
+                        </div>
+
+
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center text-sm font-semibold">
+                                <label for="rangeL2">Voladizo B-C (L2)</label>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" id="numL2" class="w-16 text-right border rounded p-1 text-blue-700" min="0.5" max="6" step="0.5" value="2"> m
+                                </div>
+                            </div>
+                            <input type="range" id="rangeL2" class="w-full cursor-pointer accent-blue-600" min="0.5" max="6" step="0.5" value="2">
+                        </div>
+                    </div>
+
+
+                    <h2 class="font-bold text-slate-700 border-b pb-2 mt-6 mb-4">Parámetros de Cargas</h2>
+                    
+                    <div class="space-y-4">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center text-sm font-semibold">
+                                <label for="rangeQ1">Carga q1 (Tramo)</label>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" id="numQ1" class="w-16 text-right border rounded p-1 text-blue-700" min="0" max="50" step="1" value="10"> kN/m
+                                </div>
+                            </div>
+                            <input type="range" id="rangeQ1" class="w-full cursor-pointer accent-blue-600" min="0" max="50" step="1" value="10">
+                        </div>
+
+
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center text-sm font-semibold">
+                                <label for="rangeQ2">Carga q2 (Voladizo)</label>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" id="numQ2" class="w-16 text-right border rounded p-1 text-red-600" min="0" max="50" step="1" value="15"> kN/m
+                                </div>
+                            </div>
+                            <input type="range" id="rangeQ2" class="w-full cursor-pointer accent-red-500" min="0" max="50" step="1" value="15">
+                        </div>
+
+
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center text-sm font-semibold">
+                                <label for="rangeP">Carga Puntual (P)</label>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" id="numP" class="w-16 text-right border rounded p-1 text-orange-600" min="-50" max="50" step="1" value="20"> kN
+                                </div>
+                            </div>
+                            <input type="range" id="rangeP" class="w-full cursor-pointer accent-orange-500" min="-50" max="50" step="1" value="20">
+                            <span class="text-xs text-slate-500">Valores negativos apuntan hacia arriba.</span>
+                        </div>
+
+
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center text-sm font-semibold">
+                                <label for="rangeL3">Posición de P (L3)</label>
+                                <div class="flex items-center gap-1">
+                                    <input type="number" id="numL3" class="w-16 text-right border rounded p-1 text-orange-600" min="0" step="0.5" value="2"> m
+                                </div>
+                            </div>
+                            <input type="range" id="rangeL3" class="w-full cursor-pointer accent-orange-500" min="0" step="0.5" value="2">
+                        </div>
+                    </div>
+                </div>
+
+
+                <!-- Tarjeta de Resultados -->
+                <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <h2 class="font-bold text-slate-700 border-b pb-2 mb-4">Resultados Clave</h2>
+                    <ul class="space-y-3 text-sm">
+                        <li class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="font-medium">Reacción A (Ra)</span>
+                            <span id="valRA" class="font-bold text-slate-800">0.00 kN</span>
+                        </li>
+                        <li class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="font-medium">Reacción B (Rb)</span>
+                            <span id="valRB" class="font-bold text-slate-800">0.00 kN</span>
+                        </li>
+                        <li class="flex justify-between border-b border-slate-100 pb-1">
+                            <span class="font-medium">Momento en B (Mb)</span>
+                            <span id="valMB" class="font-bold text-slate-800">0.00 kNm</span>
+                        </li>
+                        <li class="flex justify-between bg-yellow-50 p-2 rounded">
+                            <span class="font-bold text-yellow-800">Momento Máximo</span>
+                            <span id="valMMax" class="font-bold text-yellow-900">0.00 kNm</span>
+                        </li>
+                        <li class="flex justify-between p-2">
+                            <span class="font-bold text-blue-800">Posición Corte Q=0</span>
+                            <span id="valXQ0" class="font-bold text-blue-900">x = 0.00 m</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+
+            <!-- Panel Derecho: Gráficos (Pasa arriba en celulares) -->
+            <div class="w-full lg:w-2/3 flex flex-col gap-6 order-1 lg:order-2">
+                <!-- Estructura -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-center mb-2 text-slate-600">Esquema y Cargas</h3>
+                    <canvas id="cvsStruct"></canvas>
+                </div>
+
+
+                <!-- Diagrama M -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-center mb-2 text-slate-600">Diagrama de Momento Flector M(x)</h3>
+                    <canvas id="cvsM"></canvas>
+                </div>
+
+
+                <!-- Diagrama Q -->
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                    <h3 class="text-sm font-bold text-center mb-2 text-slate-600">Diagrama de Esfuerzo Cortante Q(x)</h3>
+                    <canvas id="cvsQ"></canvas>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <script>
+        // Referencias a inputs Numéricos y Range
+        const inputs = {
+            L1: { num: document.getElementById('numL1'), range: document.getElementById('rangeL1') },
+            L2: { num: document.getElementById('numL2'), range: document.getElementById('rangeL2') },
+            Q1: { num: document.getElementById('numQ1'), range: document.getElementById('rangeQ1') },
+            Q2: { num: document.getElementById('numQ2'), range: document.getElementById('rangeQ2') },
+            P:  { num: document.getElementById('numP'),  range: document.getElementById('rangeP') },
+            L3: { num: document.getElementById('numL3'), range: document.getElementById('rangeL3') }
+        };
+
+
+        // Salidas de texto
+        const valRA = document.getElementById('valRA');
+        const valRB = document.getElementById('valRB');
+        const valMB = document.getElementById('valMB');
+        const valMMax = document.getElementById('valMMax');
+        const valXQ0 = document.getElementById('valXQ0');
+
+
+        // Contextos de Canvas
+        const ctxS = document.getElementById('cvsStruct').getContext('2d');
+        const ctxM = document.getElementById('cvsM').getContext('2d');
+        const ctxQ = document.getElementById('cvsQ').getContext('2d');
+
+
+        // Función para sincronizar inputs (slider <-> number)
+        function syncInputs(source, target) {
+            target.value = source.value;
+            update();
+        }
+
+
+        Object.values(inputs).forEach(pair => {
+            pair.num.addEventListener('input', () => syncInputs(pair.num, pair.range));
+            pair.range.addEventListener('input', () => syncInputs(pair.range, pair.num));
+        });
+
+
+        function resizeCanvas(ctx) {
+            const canvas = ctx.canvas;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+            return { w: rect.width, h: rect.height };
+        }
+
+
+        function update() {
+            // 1. Leer y validar variables
+            let L1 = parseFloat(inputs.L1.num.value) || 0;
+            let L2 = parseFloat(inputs.L2.num.value) || 0;
+            const q1 = parseFloat(inputs.Q1.num.value) || 0;
+            const q2 = parseFloat(inputs.Q2.num.value) || 0;
+            const P = parseFloat(inputs.P.num.value) || 0;
+            let L3 = parseFloat(inputs.L3.num.value) || 0;
+
+
+            const Ltotal = L1 + L2;
+
+
+            // Restricción dinámica de L3
+            inputs.L3.range.max = Ltotal;
+            inputs.L3.num.max = Ltotal;
+            if (L3 > Ltotal) {
+                L3 = Ltotal;
+                inputs.L3.num.value = Ltotal;
+                inputs.L3.range.value = Ltotal;
+            }
+
+
+            // 2. Cálculo de reacciones
+            const RB = ((q1 * L1 * L1 / 2) + (q2 * L2 * (L1 + L2 / 2)) + (P * L3)) / L1;
+            const RA = (q1 * L1) + (q2 * L2) + P - RB;
+
+
+            valRA.textContent = RA.toFixed(2) + ' kN';
+            valRB.textContent = RB.toFixed(2) + ' kN';
+
+
+            // Funciones de esfuerzos internos (superposición)
+            function getQ(x) {
+                let q = RA;
+                if (x > L1) q += RB;
+                if (x <= L1) q -= q1 * x; else q -= q1 * L1;
+                if (x > L1) q -= q2 * (x - L1);
+                if (x > L3) q -= P; 
+                // Excepción técnica para el punto exacto bajo la carga puntual (dibujo)
+                return q;
+            }
+
+
+            function getM(x) {
+                let m = RA * x;
+                if (x > L1) m += RB * (x - L1);
+                if (x <= L1) m -= q1 * x * x / 2; else m -= q1 * L1 * (x - L1 / 2);
+                if (x > L1) m -= q2 * (x - L1) * (x - L1) / 2;
+                if (x > L3) m -= P * (x - L3);
+                return m;
+            }
+
+
+            valMB.textContent = getM(L1).toFixed(2) + ' kNm';
+
+
+            // Escaneo numérico para encontrar Q=0 y Máximos/Mínimos
+            let maxM = -Infinity, minM = Infinity;
+            let posMaxM = 0, posMinM = 0;
+            let pointsToDraw = [];
+            let lastQ = getQ(0);
+            let crossX = [];
+
+
+            const steps = 1000;
+            for (let i = 0; i <= steps; i++) {
+                const x = (i / steps) * Ltotal;
+                const m = getM(x);
+                const q = getQ(x);
+                
+                if (m > maxM) { maxM = m; posMaxM = x; }
+                if (m < minM) { minM = m; posMinM = x; }
+                
+                // Detectar cruce por cero de Q
+                if (i > 0 && Math.sign(q) !== Math.sign(lastQ) && Math.abs(q - lastQ) < 100) {
+                    crossX.push(x);
+                }
+                lastQ = q;
+            }
+            
+            // Evaluar saltos puntuales (bajo P o Apoyo B)
+            [L1, L3].forEach(px => {
+                if (px >= 0 && px <= Ltotal) crossX.push(px);
+            });
+
+
+            // Encontrar el momento máximo absoluto
+            let absMaxM = Math.abs(maxM) >= Math.abs(minM) ? maxM : minM;
+            let posAbsMaxM = Math.abs(maxM) >= Math.abs(minM) ? posMaxM : posMinM;
+
+
+            valMMax.textContent = absMaxM.toFixed(2) + ' kNm';
+            
+            // Presentación Q=0 (Mostramos el primero importante dentro del tramo)
+            let qZeroText = "-";
+            if (crossX.length > 0) {
+                let validCrosses = crossX.filter(x => x > 0.05 && x < Ltotal - 0.05);
+                if (validCrosses.length > 0) {
+                    qZeroText = "x = " + validCrosses[0].toFixed(2) + " m";
+                } else if (crossX.includes(L1)) {
+                    qZeroText = "x = " + L1.toFixed(2) + " m (Apoyo B)";
+                } else if (crossX.includes(L3)) {
+                    qZeroText = "x = " + L3.toFixed(2) + " m (Carga P)";
+                }
+            }
+            valXQ0.textContent = qZeroText;
+
+
+            // 3. Dibujo de Gráficos
+            const dimS = resizeCanvas(ctxS);
+            const dimM = resizeCanvas(ctxM);
+            const dimQ = resizeCanvas(ctxQ);
+
+
+            const marginX = 40;
+            const plotW = dimS.w - 2 * marginX;
+            const scaleX = plotW / Ltotal;
+            const toPx = (x) => marginX + x * scaleX;
+
+
+            // --- A. ESTRUCTURA ---
+            ctxS.clearRect(0, 0, dimS.w, dimS.h);
+            const yBeam = 100;
+            
+            // Proporción visual cargas
+            const maxQVal = Math.max(Math.abs(q1), Math.abs(q2), 1);
+            
+            function drawDistLoad(x1, x2, qVal, color, label) {
+                if (qVal <= 0 || x1 >= x2) return;
+                const px1 = toPx(x1), px2 = toPx(x2);
+                const hLoad = 15 + (qVal / maxQVal) * 25; // Altura proporcional
+                
+                ctxS.fillStyle = color + "22"; // Transparente
+                ctxS.strokeStyle = color;
+                ctxS.lineWidth = 1.5;
+                
+                ctxS.fillRect(px1, yBeam - hLoad, px2 - px1, hLoad);
+                ctxS.beginPath(); ctxS.moveTo(px1, yBeam - hLoad); ctxS.lineTo(px2, yBeam - hLoad); ctxS.stroke();
+                
+                for (let px = px1 + 6; px <= px2 - 6; px += 16) {
+                    ctxS.beginPath(); ctxS.moveTo(px, yBeam - hLoad); ctxS.lineTo(px, yBeam - 2);
+                    ctxS.lineTo(px - 3, yBeam - 7); ctxS.moveTo(px, yBeam - 2); ctxS.lineTo(px + 3, yBeam - 7);
+                    ctxS.stroke();
+                }
+                ctxS.fillStyle = color; ctxS.font = "bold 11px sans-serif"; ctxS.textAlign = "center";
+                ctxS.fillText(`${label}=${qVal} kN/m`, (px1 + px2) / 2, yBeam - hLoad - 6);
+            }
+
+
+            drawDistLoad(0, L1, q1, "#2563eb", "q1");
+            drawDistLoad(L1, Ltotal, q2, "#dc2626", "q2");
+
+
+            // Carga Puntual P
+            if (P !== 0) {
+                const pxP = toPx(L3);
+                ctxS.strokeStyle = "#ea580c"; ctxS.lineWidth = 2.5; ctxS.fillStyle = "#ea580c";
+                ctxS.beginPath();
+                if (P > 0) {
+                    // Flecha hacia abajo
+                    ctxS.moveTo(pxP, yBeam - 50); ctxS.lineTo(pxP, yBeam - 2);
+                    ctxS.lineTo(pxP - 4, yBeam - 10); ctxS.moveTo(pxP, yBeam - 2); ctxS.lineTo(pxP + 4, yBeam - 10);
+                    ctxS.fillText(`P=${P} kN`, pxP, yBeam - 55);
+                } else {
+                    // Flecha hacia arriba
+                    ctxS.moveTo(pxP, yBeam + 50); ctxS.lineTo(pxP, yBeam + 2);
+                    ctxS.lineTo(pxP - 4, yBeam + 10); ctxS.moveTo(pxP, yBeam + 2); ctxS.lineTo(pxP + 4, yBeam + 10);
+                    ctxS.fillText(`P=${P} kN`, pxP, yBeam + 65);
+                }
+                ctxS.stroke();
+            }
+
+
+            // Viga y Apoyos
+            ctxS.strokeStyle = "#1e293b"; ctxS.lineWidth = 5;
+            ctxS.beginPath(); ctxS.moveTo(toPx(0), yBeam); ctxS.lineTo(toPx(Ltotal), yBeam); ctxS.stroke();
+            
+            // Apoyo A
+            ctxS.fillStyle = "#475569"; ctxS.beginPath();
+            ctxS.moveTo(toPx(0), yBeam + 3); ctxS.lineTo(toPx(0) - 10, yBeam + 18); ctxS.lineTo(toPx(0) + 10, yBeam + 18); ctxS.fill();
+            // Apoyo B
+            ctxS.beginPath();
+            ctxS.moveTo(toPx(L1), yBeam + 3); ctxS.lineTo(toPx(L1) - 10, yBeam + 15); ctxS.lineTo(toPx(L1) + 10, yBeam + 15); ctxS.fill();
+            ctxS.beginPath(); ctxS.arc(toPx(L1) - 5, yBeam + 18, 2.5, 0, Math.PI * 2); ctxS.arc(toPx(L1) + 5, yBeam + 18, 2.5, 0, Math.PI * 2); ctxS.fill();
+
+
+            // Reacciones (Flechas verdes)
+            ctxS.strokeStyle = "#16a34a"; ctxS.lineWidth = 2;
+            [0, L1].forEach(x => {
+                ctxS.beginPath(); ctxS.moveTo(toPx(x), yBeam + 40); ctxS.lineTo(toPx(x), yBeam + 25);
+                ctxS.lineTo(toPx(x) - 4, yBeam + 30); ctxS.moveTo(toPx(x), yBeam + 25); ctxS.lineTo(toPx(x) + 4, yBeam + 30); ctxS.stroke();
+            });
+
+
+            // Cotas
+            const yDim = yBeam + 60;
+            ctxS.strokeStyle = "#94a3b8"; ctxS.lineWidth = 1; ctxS.fillStyle = "#64748b"; ctxS.font = "11px sans-serif";
+            ctxS.beginPath(); ctxS.moveTo(toPx(0), yDim); ctxS.lineTo(toPx(L1), yDim); ctxS.stroke();
+            ctxS.fillText(`L1 = ${L1} m`, toPx(L1 / 2), yDim - 4);
+            ctxS.beginPath(); ctxS.moveTo(toPx(L1), yDim); ctxS.lineTo(toPx(Ltotal), yDim); ctxS.stroke();
+            ctxS.fillText(`L2 = ${L2} m`, toPx(L1 + L2 / 2), yDim - 4);
+
+
+            // --- B. MOMENTO ---
+            ctxM.clearRect(0, 0, dimM.w, dimM.h);
+            const cyM = dimM.h / 2;
+            const maxAbsM = Math.max(Math.abs(maxM), Math.abs(minM), 0.01);
+            const scM = (dimM.h * 0.35) / maxAbsM; // Escala gráfica
+
+
+            ctxM.strokeStyle = "#cbd5e1"; ctxM.lineWidth = 1;
+            ctxM.beginPath(); ctxM.moveTo(toPx(0), cyM); ctxM.lineTo(toPx(Ltotal), cyM); ctxM.stroke();
+
+
+            ctxM.beginPath(); ctxM.moveTo(toPx(0), cyM);
+            for (let i = 0; i <= steps; i++) {
+                const x = (i / steps) * Ltotal;
+                ctxM.lineTo(toPx(x), cyM + getM(x) * scM); // M positivo hacia abajo
+            }
+            ctxM.lineTo(toPx(Ltotal), cyM);
+            ctxM.fillStyle = "#fef08a88"; ctxM.fill();
+            ctxM.strokeStyle = "#ca8a04"; ctxM.lineWidth = 2; ctxM.stroke();
+
+
+            // Textos en M
+            ctxM.fillStyle = "#9a3412"; ctxM.font = "bold 11px sans-serif"; ctxM.textAlign = "center";
+            ctxM.fillText(`${absMaxM.toFixed(2)} kNm`, toPx(posAbsMaxM), cyM + absMaxM * scM + (absMaxM > 0 ? 15 : -8));
+            ctxM.font = "10px sans-serif";
+            ctxM.fillText(`x=${posAbsMaxM.toFixed(2)}m`, toPx(posAbsMaxM), cyM + absMaxM * scM + (absMaxM > 0 ? 27 : -20));
+
+
+            // --- C. CORTE ---
+            ctxQ.clearRect(0, 0, dimQ.w, dimQ.h);
+            const cyQ = dimQ.h / 2;
+            let locMaxQ = 0;
+            for(let i=0; i<=steps; i++){ locMaxQ = Math.max(locMaxQ, Math.abs(getQ((i/steps)*Ltotal))); }
+            // Revisar saltos en L3 y L1
+            locMaxQ = Math.max(locMaxQ, Math.abs(getQ(L3-0.01)), Math.abs(getQ(L3+0.01)), Math.abs(getQ(L1-0.01)), Math.abs(getQ(L1+0.01)));
+            const scQ = (dimQ.h * 0.35) / (locMaxQ || 1);
+
+
+            ctxQ.strokeStyle = "#cbd5e1"; ctxQ.lineWidth = 1;
+            ctxQ.beginPath(); ctxQ.moveTo(toPx(0), cyQ); ctxQ.lineTo(toPx(Ltotal), cyQ); ctxQ.stroke();
+
+
+            ctxQ.beginPath(); ctxQ.moveTo(toPx(0), cyQ);
+            
+            // Para dibujar Q con saltos rectos, evaluamos antes y después de los puntos críticos
+            let criticalX = [0, L1, L3, Ltotal];
+            criticalX.sort((a,b) => a-b);
+            criticalX = [...new Set(criticalX.map(v => Math.round(v*1000)/1000))];
+
+
+            criticalX.forEach((cx, idx) => {
+                if (idx > 0) {
+                    // Interpolar entre puntos críticos para curvas de q distribuida
+                    const prevX = criticalX[idx-1];
+                    for (let px = prevX + 0.05; px < cx; px += 0.05) {
+                        ctxQ.lineTo(toPx(px), cyQ - getQ(px) * scQ);
+                    }
+                }
+                // Saltar al nuevo valor en el punto crítico
+                // Justo antes del punto (límite por izquierda)
+                if(cx > 0) ctxQ.lineTo(toPx(cx), cyQ - getQ(cx - 0.001) * scQ);
+                // Justo después del punto (límite por derecha)
+                if(cx < Ltotal) ctxQ.lineTo(toPx(cx), cyQ - getQ(cx + 0.001) * scQ);
+            });
+            
+            ctxQ.lineTo(toPx(Ltotal), cyQ);
+            ctxQ.fillStyle = "#bae6fd88"; ctxQ.fill();
+            ctxQ.strokeStyle = "#0284c7"; ctxQ.lineWidth = 2; ctxQ.stroke();
+
+
+            // Textos en Q
+            ctxQ.fillStyle = "#0369a1"; ctxQ.font = "bold 11px sans-serif";
+            
+            // Texto en A
+            const qa = getQ(0.001);
+            ctxQ.textAlign = "left"; ctxQ.fillText(qa.toFixed(2), toPx(0)+4, cyQ - qa * scQ - 6);
+            
+            // Textos en B (izq y der)
+            const qb_izq = getQ(L1 - 0.001);
+            const qb_der = getQ(L1 + 0.001);
+            ctxQ.textAlign = "right"; ctxQ.fillText(qb_izq.toFixed(2), toPx(L1)-4, cyQ - qb_izq * scQ + (qb_izq<0?12:-6));
+            ctxQ.textAlign = "left";  ctxQ.fillText(qb_der.toFixed(2), toPx(L1)+4, cyQ - qb_der * scQ - 6);
+        }
+
+
+        // Init
+        update();
+        window.addEventListener('resize', update);
+    </script>
+</body>
+</html>
