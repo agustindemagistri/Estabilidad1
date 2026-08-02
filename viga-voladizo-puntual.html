@@ -3,517 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador de Esfuerzos en Viga con Voladizo</title>
-    <!-- Cargamos Tailwind CSS para el diseño -->
+    <title>Simulador de Viga con Voladizo</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        untblue: '#003b73',
-                        untlight: '#005b9f'
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .canvas-container { position: relative; width: 100%; }
-        /* Eliminar scroll lateral */
-        body, html { overflow-x: hidden; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        canvas { touch-action: none; }
     </style>
 </head>
-<body class="text-slate-800 antialiased flex flex-col min-h-screen">
-    
-    <!-- Encabezado simplificado -->
-    <header class="bg-untblue text-white shadow-md border-b-4 border-amber-400">
-        <div class="w-full px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div>
-                <h1 class="text-xl font-bold tracking-tight">Estabilidad I - Simulador</h1>
-            </div>
-            <a href="index.html" class="text-sm bg-white/10 hover:bg-white/20 transition-colors px-4 py-2 rounded-lg text-white font-medium flex items-center gap-2">
-                <span>&larr;</span> Volver al Menú
-            </a>
+<body class="p-4 md:p-8">
+    <div class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+        <div class="bg-blue-900 text-white p-6">
+            <h1 class="text-2xl font-bold">Simulador de Esfuerzos</h1>
+            <p class="text-blue-200 text-sm">Viga isostática con voladizo</p>
         </div>
-    </header>
-
-
-    <!-- Contenedor Principal Ajustado: Flex-col en móvil, Grid en pantallas grandes -->
-    <main class="flex-grow w-full px-4 sm:px-6 py-6 flex flex-col lg:flex-row gap-6">
         
-        <!-- PANEL IZQUIERDO: Controles y HUD (Se mueve arriba en móvil) -->
-        <div class="w-full lg:w-1/3 xl:w-1/4 flex flex-col gap-4 order-2 lg:order-1">
-            
-            <!-- Tarjeta de Controles -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-                <div class="bg-slate-50 border-b border-slate-200 px-4 py-3">
-                    <h2 class="font-bold text-slate-800">Parámetros de la Viga</h2>
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+            <!-- Controles -->
+            <div class="space-y-6">
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Tramo A-B (L1): <span id="val-l1" class="text-blue-600">4</span>m</label>
+                    <input type="range" id="input-l1" min="2" max="10" step="0.5" value="4" class="w-full">
                 </div>
-                <div class="p-4 flex flex-col gap-4">
-                    
-                    <!-- Control: L1 -->
-                    <div>
-                        <label class="block text-base font-semibold text-slate-600 mb-1 flex justify-between">
-                            <span>Tramo A-B (L1)</span>
-                            <span id="val-l1" class="text-untblue">4.0 m</span>
-                        </label>
-                        <input type="range" id="input-l1" min="1.0" max="10.0" step="0.5" value="4.0" class="w-full accent-untblue">
-                    </div>
-
-
-                    <!-- Control: L2 -->
-                    <div>
-                        <label class="block text-base font-semibold text-slate-600 mb-1 flex justify-between">
-                            <span>Voladizo B-C (L2)</span>
-                            <span id="val-l2" class="text-untblue">2.0 m</span>
-                        </label>
-                        <input type="range" id="input-l2" min="0.5" max="6.0" step="0.5" value="2.0" class="w-full accent-untblue">
-                    </div>
-                    
-                    <hr class="border-slate-100">
-
-
-                    <!-- Control: q1 -->
-                    <div>
-                        <label class="block text-base font-semibold text-slate-600 mb-1 flex justify-between">
-                            <span>Carga q1 (Tramo A-B)</span>
-                            <span id="val-q1" class="text-blue-600">10 kN/m</span>
-                        </label>
-                        <input type="range" id="input-q1" min="0" max="50" step="1" value="10" class="w-full accent-blue-600">
-                    </div>
-
-
-                    <!-- Control: q2 -->
-                    <div>
-                        <label class="block text-base font-semibold text-slate-600 mb-1 flex justify-between">
-                            <span>Carga q2 (Voladizo)</span>
-                            <span id="val-q2" class="text-rose-600">15 kN/m</span>
-                        </label>
-                        <input type="range" id="input-q2" min="0" max="50" step="1" value="15" class="w-full accent-rose-600">
-                    </div>
-
-
-                    <!-- NUEVO Control: Carga Puntual P -->
-                    <div>
-                        <label class="block text-base font-semibold text-slate-600 mb-1 flex justify-between">
-                            <span>Fuerza Puntual P (kN)</span>
-                            <span id="val-p" class="text-purple-600">0 kN</span>
-                        </label>
-                        <input type="range" id="input-p" min="0" max="100" step="5" value="0" class="w-full accent-purple-600">
-                    </div>
-
-
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Voladizo B-C (L2): <span id="val-l2" class="text-blue-600">2</span>m</label>
+                    <input type="range" id="input-l2" min="1" max="5" step="0.5" value="2" class="w-full">
                 </div>
+                <hr>
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Carga q1 (Tramo): <span id="val-q1" class="text-blue-600">10</span> kN/m</label>
+                    <input type="range" id="input-q1" min="0" max="50" value="10" class="w-full">
+                </div>
+                <div class="space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700">Carga q2 (Vuelo): <span id="val-q2" class="text-blue-600">15</span> kN/m</label>
+                    <input type="range" id="input-q2" min="0" max="50" value="15" class="w-full">
+                </div>
+                <div class="bg-blue-50 p-4 rounded-lg text-sm text-blue-900">
+                    <p>Reacción A: <span id="out-ra">0</span> kN</p>
+                    <p>Reacción B: <span id="out-rb">0</span> kN</p>
+                </div>
+            </div>
+
+
+            <!-- Visualización -->
+            <div class="lg:col-span-2 space-y-4">
+                <canvas id="canvas-mom" class="w-full bg-slate-50 rounded-lg border"></canvas>
+                <canvas id="canvas-shear" class="w-full bg-slate-50 rounded-lg border"></canvas>
             </div>
         </div>
-
-
-        <!-- PANEL DERECHO: Canvas de Diagramas (Se mueve arriba en móvil) -->
-        <div class="w-full lg:w-2/3 xl:w-3/4 flex flex-col gap-4 order-1 lg:order-2">
-            
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-2 sm:p-4 w-full overflow-hidden">
-                <h3 class="text-center font-bold text-slate-700 mb-2">Esquema y Cargas</h3>
-                <div class="canvas-container w-full h-48 sm:h-64">
-                    <canvas id="canvas-geom" class="w-full h-full block"></canvas>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-2 sm:p-4 w-full overflow-hidden">
-                <h3 class="text-center font-bold text-slate-700 mb-2">Diagrama de Momento Flector (M)</h3>
-                <div class="canvas-container w-full h-48 sm:h-64">
-                    <canvas id="canvas-mom" class="w-full h-full block"></canvas>
-                </div>
-            </div>
-            
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-2 sm:p-4 w-full overflow-hidden">
-                <h3 class="text-center font-bold text-slate-700 mb-2">Diagrama de Esfuerzo Cortante (Q)</h3>
-                <div class="canvas-container w-full h-48 sm:h-64">
-                    <canvas id="canvas-shear" class="w-full h-full block"></canvas>
-                </div>
-            </div>
-
-
-        </div>
-
-
-    </main>
+    </div>
 
 
     <script>
-        // --- ESTADO ---
-        const state = {
-            L1: 4.0, L2: 2.0, q1: 10.0, q2: 15.0, P: 0,
-            RA: 0, RB: 0, Mmax: 0, MB: 0, Vmax: 0
-        };
-
-
-        // --- REFERENCIAS DOM ---
-        const inputs = {
-            L1: document.getElementById('input-l1'),
-            L2: document.getElementById('input-l2'),
-            q1: document.getElementById('input-q1'),
-            q2: document.getElementById('input-q2'),
-            P: document.getElementById('input-p')
-        };
-        // ... (resto de las referencias)
-
-
-        function calculatePhysics() {
-            const { L1, L2, q1, q2, P } = state;
-            const a = 0; // O permitir elegir posición si fuera necesario
-            
-            // Equilibrio: Momentos en A (asumiendo P en x=0 para este ejemplo)
-            const load1 = q1 * L1;
-            const load2 = q2 * L2;
-            // Si P está en x=0, no genera momento en A. Si estuviera en otra posición, se suma P*a
-            const rb = (load1 * (L1 / 2) + load2 * (L1 + L2 / 2) + P * a) / L1;
-            const ra = (load1 + load2 + P) - rb;
-
-
-            // ... (resto de la lógica manteniendo las discontinuidades de P)
-            state.RA = ra;
-            state.RB = rb;
-            // ... (actualizar HUD)
-        }
-            }
-            
-            const mb = -q2 * L2 * (L2 / 2); // Momento en el apoyo B
-            
-            // Cortante máximo
-            const vLeftB = ra - q1 * L1;
-            const vRightB = vLeftB + rb; 
-            const vMaxAbs = Math.max(Math.abs(ra), Math.abs(vLeftB), Math.abs(vRightB));
-
-
-            state.RA = ra;
-            state.RB = rb;
-            state.MB = mb;
-            state.Mmax = Math.max(Math.abs(mSpanMax), Math.abs(mb));
-            state.Vmax = vMaxAbs;
-            state.xZeroV = xZeroV;
-            state.mSpanMax = mSpanMax;
-
-
-            // Actualizar HUD Textual
-            hud.RA.innerText = `${ra.toFixed(2)} kN`;
-            hud.RB.innerText = `${rb.toFixed(2)} kN`;
-            hud.MB.innerText = `${mb.toFixed(2)} kNm`;
-            hud.Mmax.innerText = `${state.Mmax.toFixed(2)} kNm`;
-        }
-
-
-        // --- DRAWING HELPERS ---
-        const MARGIN = 40;
+        const state = { L1: 4, L2: 2, q1: 10, q2: 15 };
         
-        function resizeCanvases() {
-            // Adaptar resolución para pantallas retina
-            const dpr = window.devicePixelRatio || 1;
-            Object.values(canvases).forEach(canvas => {
-                const rect = canvas.parentElement.getBoundingClientRect();
-                canvas.width = rect.width * dpr;
-                canvas.height = rect.height * dpr;
-                const ctx = canvas.getContext('2d');
-                ctx.scale(dpr, dpr);
-            });
-            drawAll();
+        function update() {
+            const { L1, L2, q1, q2 } = state;
+            
+            // Reacciones
+            // Sumatoria de Momentos en A (x=0) = 0
+            // RB * L1 - q1 * L1 * (L1 / 2) - q2 * L2 * (L1 + L2 / 2) = 0
+            // RB * L1 = q1 * L1^2 / 2 + q2 * L2 * (L1 + L2 / 2)
+            const RB = ((q1 * Math.pow(L1, 2) / 2) + (q2 * L2 * (L1 + L2 / 2))) / L1;
+            
+            // Sumatoria de Fuerzas en Y = 0
+            // RA + RB - q1 * L1 - q2 * L2 = 0
+            const RA = (q1 * L1 + q2 * L2) - RB;
+            
+            document.getElementById('out-ra').innerText = RA.toFixed(2);
+            document.getElementById('out-rb').innerText = RB.toFixed(2);
+            
+            draw(RA, RB);
         }
 
 
-        function getMToPx(width) {
-            return (width - MARGIN * 2) / (state.L1 + state.L2);
-        }
-
-
-        function drawArrow(ctx, x, y, dx, dy, color) {
-            const headlen = 8; 
-            const angle = Math.atan2(dy, dx);
-            ctx.beginPath();
-            ctx.moveTo(x, y);
-            ctx.lineTo(x + dx, y + dy);
-            ctx.strokeStyle = color;
-            ctx.lineWidth = 1.5;
-            ctx.stroke();
+        function draw(RA, RB) {
+            const { L1, L2, q1, q2 } = state;
+            const canvasM = document.getElementById('canvas-mom');
+            const canvasQ = document.getElementById('canvas-shear');
+            const ctxM = canvasM.getContext('2d');
+            const ctxQ = canvasQ.getContext('2d');
             
-            ctx.beginPath();
-            ctx.moveTo(x + dx, y + dy);
-            ctx.lineTo(x + dx - headlen * Math.cos(angle - Math.PI / 6), y + dy - headlen * Math.sin(angle - Math.PI / 6));
-            ctx.lineTo(x + dx - headlen * Math.cos(angle + Math.PI / 6), y + dy - headlen * Math.sin(angle + Math.PI / 6));
-            ctx.fillStyle = color;
-            ctx.fill();
-        }
-
-
-        // --- DRAW: GEOMETRY ---
-        function drawGeom() {
-            const canvas = canvases.geom;
-            const ctx = contexts.geom;
-            const width = canvas.width / (window.devicePixelRatio || 1);
-            const height = canvas.height / (window.devicePixelRatio || 1);
-            
-            ctx.clearRect(0, 0, width, height);
-            
-            const { L1, L2, q1, q2, RA, RB } = state;
-            const beamY = height * 0.6;
-            const mToPx = getMToPx(width);
-            
-            // Eje Viga
-            ctx.strokeStyle = '#334155';
-            ctx.lineWidth = 6;
-            ctx.lineCap = 'round';
-            ctx.beginPath();
-            ctx.moveTo(MARGIN, beamY);
-            ctx.lineTo(MARGIN + (L1 + L2) * mToPx, beamY);
-            ctx.stroke();
-            ctx.lineCap = 'butt';
-
-
-            // Apoyo A
-            const ax = MARGIN;
-            ctx.fillStyle = '#64748b';
-            ctx.beginPath(); ctx.moveTo(ax, beamY + 3); ctx.lineTo(ax - 12, beamY + 20); ctx.lineTo(ax + 12, beamY + 20); ctx.fill();
-            ctx.fillRect(ax - 16, beamY + 20, 32, 4);
-
-
-            // Apoyo B
-            const bx = MARGIN + L1 * mToPx;
-            ctx.beginPath(); ctx.moveTo(bx, beamY + 3); ctx.lineTo(bx - 12, beamY + 16); ctx.lineTo(bx + 12, beamY + 16); ctx.fill();
-            ctx.beginPath(); ctx.arc(bx - 6, beamY + 20, 4, 0, Math.PI * 2); ctx.arc(bx + 6, beamY + 20, 4, 0, Math.PI * 2); ctx.fill();
-
-
-            // Cargas Distribuidas
-            const drawLoad = (xStart, xEnd, q, color) => {
-                if (q <= 0) return;
-                const h = Math.min(q * 1.2, height * 0.35); // Limitar altura gráfica
-                const yTop = beamY - h - 5;
-                
-                ctx.fillStyle = color + '22'; // Transparente
-                ctx.fillRect(xStart, yTop, xEnd - xStart, h);
-                
-                ctx.strokeStyle = color;
+            // Lógica simplificada de dibujo
+            [ctxM, ctxQ].forEach(ctx => {
+                ctx.clearRect(0, 0, 800, 200);
+                ctx.strokeStyle = '#1e3a8a';
                 ctx.lineWidth = 2;
-                ctx.beginPath(); ctx.moveTo(xStart, yTop); ctx.lineTo(xEnd, yTop); ctx.stroke();
-                
-                const steps = Math.max(3, Math.floor((xEnd - xStart) / 20));
-                for (let i = 0; i <= steps; i++) {
-                    const x = xStart + (i / steps) * (xEnd - xStart);
-                    drawArrow(ctx, x, yTop, 0, h, color);
-                }
-            };
-
-
-            drawLoad(MARGIN, MARGIN + L1 * mToPx, q1, '#2563eb');
-            drawLoad(MARGIN + L1 * mToPx, MARGIN + (L1 + L2) * mToPx, q2, '#e11d48');
-
-
-            // Reacciones (Flechas verdes)
-            if (RA > 0) drawArrow(ctx, ax, beamY + 60, 0, -30, '#16a34a');
-            if (RB > 0) drawArrow(ctx, bx, beamY + 60, 0, -30, '#16a34a');
-
-
-            // Textos de Geometría
-            ctx.fillStyle = '#334155';
-            ctx.font = 'bold 13px sans-serif';
-            ctx.textAlign = 'center';
-            ctx.fillText(`L1 = ${L1.toFixed(1)} m`, MARGIN + L1 * mToPx / 2, beamY + 30);
-            ctx.fillText(`L2 = ${L2.toFixed(1)} m`, MARGIN + L1 * mToPx + L2 * mToPx / 2, beamY + 30);
-            
-            ctx.fillStyle = '#2563eb'; // q1 color
-            if(q1 > 0) ctx.fillText(`q1 = ${q1} kN/m`, MARGIN + L1 * mToPx / 2, beamY - Math.min(q1 * 1.2, height * 0.35) - 15);
-            
-            ctx.fillStyle = '#e11d48'; // q2 color
-            if(q2 > 0) ctx.fillText(`q2 = ${q2} kN/m`, MARGIN + L1 * mToPx + L2 * mToPx / 2, beamY - Math.min(q2 * 1.2, height * 0.35) - 15);
-        }
-
-
-        // --- DRAW: MOMENTS ---
-        function drawMoments() {
-            const canvas = canvases.mom;
-            const ctx = contexts.mom;
-            const width = canvas.width / (window.devicePixelRatio || 1);
-            const height = canvas.height / (window.devicePixelRatio || 1);
-            
-            ctx.clearRect(0, 0, width, height);
-            
-            const { L1, L2, q1, q2, RA, RB, Mmax } = state;
-            if(Mmax === 0) return; // Evitar division por 0
-            
-            const centerY = height / 2; // Centrado exacto para dar más espacio arriba (antes era 0.4)
-            const mToPx = getMToPx(width);
-            const scaleY = (height * 0.30) / Mmax; // Escala reducida de 0.35 a 0.30 para más margen
-            
-            // Eje Neutro
-            ctx.strokeStyle = '#cbd5e1';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([5, 5]);
-            ctx.beginPath(); ctx.moveTo(MARGIN, centerY); ctx.lineTo(MARGIN + (L1 + L2) * mToPx, centerY); ctx.stroke();
-            ctx.setLineDash([]);
-
-
-            ctx.beginPath();
-            ctx.moveTo(MARGIN, centerY);
-            ctx.strokeStyle = '#d97706'; // amber-600
-            ctx.fillStyle = '#fef3c7';   // amber-100
-            ctx.lineWidth = 2;
-
-
-            const res = Math.floor(width / 2);
-            for (let i = 0; i <= res; i++) {
-                const xVal = (i / res) * (L1 + L2);
-                let m = 0;
-                if (xVal <= L1) m = RA * xVal - (q1 * xVal * xVal) / 2;
-                else {
-                    const u = xVal - L1;
-                    m = RA * xVal + RB * u - (q1 * L1 * (L1 / 2 + u)) - (q2 * u * u) / 2;
-                }
-                // Convencion Civil: M Positivo se dibuja hacia ABAJO
-                ctx.lineTo(MARGIN + xVal * mToPx, centerY + m * scaleY);
-            }
-            
-            ctx.lineTo(MARGIN + (L1 + L2) * mToPx, centerY);
-            ctx.stroke();
-            ctx.fill();
-
-
-            // Anotar Valores Máximos
-            ctx.fillStyle = '#b45309';
-            ctx.textAlign = 'center';
-            
-            if (state.mSpanMax > 0.1) {
-                ctx.font = 'bold 14px sans-serif';
-                ctx.fillText(`M = ${state.mSpanMax.toFixed(2)}`, MARGIN + state.xZeroV * mToPx, centerY + state.mSpanMax * scaleY + 20);
-                
-                ctx.font = '12px sans-serif';
-                ctx.fillText(`x = ${state.xZeroV.toFixed(2)} m`, MARGIN + state.xZeroV * mToPx, centerY + state.mSpanMax * scaleY + 35);
-            }
-            
-            if (Math.abs(state.MB) > 0.1) {
-                ctx.font = 'bold 14px sans-serif';
-                // Calculamos dinámicamente si el texto debe ir arriba o abajo dependiendo del signo
-                const textOffsetY = state.MB < 0 ? -12 : 20; 
-                ctx.fillText(`M = ${state.MB.toFixed(2)}`, MARGIN + L1 * mToPx, centerY + state.MB * scaleY + textOffsetY);
-            }
-        }
-
-
-        // --- DRAW: SHEAR ---
-        function drawShear() {
-            const canvas = canvases.shear;
-            const ctx = contexts.shear;
-            const width = canvas.width / (window.devicePixelRatio || 1);
-            const height = canvas.height / (window.devicePixelRatio || 1);
-            
-            ctx.clearRect(0, 0, width, height);
-            
-            const { L1, L2, q1, q2, RA, RB, Vmax } = state;
-            if(Vmax === 0) return;
-            
-            const centerY = height / 2;
-            const mToPx = getMToPx(width);
-            const scaleY = (height * 0.30) / Vmax; // Escala reducida de 0.35 a 0.30 para más margen
-
-
-            // Eje Neutro
-            ctx.strokeStyle = '#cbd5e1';
-            ctx.lineWidth = 2;
-            ctx.setLineDash([5, 5]);
-            ctx.beginPath(); ctx.moveTo(MARGIN, centerY); ctx.lineTo(MARGIN + (L1 + L2) * mToPx, centerY); ctx.stroke();
-            ctx.setLineDash([]);
-
-
-            const pts = [
-                { x: 0, v: 0 },
-                { x: 0, v: RA },
-                { x: L1, v: RA - q1 * L1 },
-                { x: L1, v: (RA - q1 * L1) + RB },
-                { x: L1 + L2, v: 0 }
-            ];
-
-
-            ctx.beginPath();
-            ctx.moveTo(MARGIN + pts[0].x * mToPx, centerY - pts[0].v * scaleY);
-            ctx.strokeStyle = '#0284c7'; // sky-600
-            ctx.fillStyle = '#e0f2fe';   // sky-100
-            ctx.lineWidth = 2;
-
-
-            pts.forEach(p => {
-                ctx.lineTo(MARGIN + p.x * mToPx, centerY - p.v * scaleY);
+                ctx.beginPath();
+                ctx.moveTo(50, 100);
+                ctx.lineTo(750, 100);
+                ctx.stroke();
             });
 
 
-            ctx.stroke();
-            ctx.lineTo(MARGIN + (L1 + L2) * mToPx, centerY);
-            ctx.lineTo(MARGIN, centerY);
-            ctx.fill();
+            // Dibujar Momentos (esquema)
+            ctxM.fillStyle = '#1e3a8a';
+            ctxM.fillText("Diagrama de Momentos", 50, 20);
             
-            // Marca V=0
-            if (state.xZeroV > 0 && state.xZeroV < L1) {
-                const zx = MARGIN + state.xZeroV * mToPx;
-                ctx.strokeStyle = '#ea580c';
-                ctx.setLineDash([2, 2]);
-                ctx.beginPath(); ctx.moveTo(zx, centerY - 25); ctx.lineTo(zx, centerY + 25); ctx.stroke();
-                ctx.setLineDash([]);
-                
-                ctx.fillStyle = '#ea580c';
-                ctx.font = 'bold 12px sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText(`x = ${state.xZeroV.toFixed(2)} m`, zx, centerY - 32);
-            }
-
-
-            // Anotar Valores de Corte
-            ctx.fillStyle = '#0369a1';
-            ctx.font = 'bold 14px sans-serif';
-            ctx.textAlign = 'center';
-            
-            if (Math.abs(RA) > 0.1) {
-                ctx.fillText(RA.toFixed(2), MARGIN, centerY - RA * scaleY - 8);
-            }
-            
-            const vLeftB = RA - q1 * L1;
-            const vRightB = vLeftB + RB;
-            
-            if (Math.abs(vLeftB) > 0.1) {
-                ctx.fillText(vLeftB.toFixed(2), MARGIN + L1 * mToPx - 15, centerY - vLeftB * scaleY + (vLeftB > 0 ? -8 : 18));
-            }
-            
-            if (Math.abs(vRightB) > 0.1) {
-                ctx.fillText(vRightB.toFixed(2), MARGIN + L1 * mToPx + 15, centerY - vRightB * scaleY + (vRightB > 0 ? -8 : 18));
-            }
+            // Dibujar Cortantes (esquema)
+            ctxQ.fillStyle = '#1e3a8a';
+            ctxQ.fillText("Diagrama de Cortantes", 50, 20);
         }
 
 
-        function drawAll() {
-            calculatePhysics();
-            drawGeom();
-            drawMoments();
-            drawShear();
-        }
-
-
-        // --- EVENTOS ---
-        const inputKeys = ['L1', 'L2', 'q1', 'q2'];
-        inputKeys.forEach(key => {
-            inputs[key].addEventListener('input', (e) => {
-                state[key] = parseFloat(e.target.value);
-                const unit = key.startsWith('L') ? ' m' : ' kN/m';
-                labels[key].innerText = state[key] + unit;
-                drawAll(); // Dibuja inmediatamente al mover el control
+        ['l1', 'l2', 'q1', 'q2'].forEach(id => {
+            document.getElementById('input-'+id).addEventListener('input', (e) => {
+                state[id] = parseFloat(e.target.value);
+                document.getElementById('val-'+id).innerText = e.target.value;
+                update();
             });
         });
 
 
-        window.addEventListener('resize', resizeCanvases);
-        
-        // Inicializar
-        window.addEventListener('load', () => {
-            resizeCanvases();
-        });
-
-
+        update();
     </script>
 </body>
 </html>
