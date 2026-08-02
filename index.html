@@ -103,7 +103,34 @@
                         </a>
                     </div>
                 </div>
-
+                <!-- Tarjeta 2: Viga con Voladizo + Carga Puntual -->
+<div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-md transition">
+    <div class="h-32 bg-slate-50 border-b border-slate-100 flex items-center justify-center p-4">
+        <!-- Esquema visual SVG -->
+        <svg viewBox="0 0 200 60" class="w-full h-full text-slate-700">
+            <!-- Viga -->
+            <line x1="20" y1="30" x2="180" y2="30" stroke="currentColor" stroke-width="4"/>
+            <!-- Apoyo Fijo (A) -->
+            <polygon points="20,32 10,48 30,48" fill="#64748b"/>
+            <!-- Apoyo Móvil (B) -->
+            <polygon points="120,32 110,45 130,45" fill="#64748b"/>
+            <circle cx="115" cy="48" r="2" fill="#64748b"/><circle cx="125" cy="48" r="2" fill="#64748b"/>
+            <!-- Carga Distribuida -->
+            <rect x="20" y="15" width="100" height="13" fill="#2563eb" opacity="0.2"/>
+            <rect x="120" y="10" width="60" height="18" fill="#dc2626" opacity="0.2"/>
+            <!-- Carga Puntual P -->
+            <line x1="150" y1="5" x2="150" y2="25" stroke="#ea580c" stroke-width="2"/>
+            <polygon points="150,30 146,22 154,22" fill="#ea580c"/>
+        </svg>
+    </div>
+    <div class="p-5">
+        <h3 class="font-bold text-lg text-slate-800 mb-2">Viga con Voladizo + Fuerza Puntual</h3>
+        <p class="text-slate-600 text-sm mb-4">Análisis de esfuerzos incorporando una carga concentrada $P$ de posición y magnitud variable.</p>
+        <a href="viga-voladizo-puntual.html" class="inline-block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition">
+            Abrir Simulador
+        </a>
+    </div>
+</div>
 
                 <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col card-hover">
                     <div class="h-32 bg-slate-50 flex items-center justify-center p-4 border-b border-slate-100 relative opacity-60">
